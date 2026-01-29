@@ -59,13 +59,10 @@ manager = ConnectionManager()
 async def lifespan(app: FastAPI):
     """Startup and shutdown events"""
     import os
-    # Startup: Generate test data
     logger.info("Starting Blobs Platform...")
     
     # Use fewer nodes in production for faster startup
-    num_individuals = int(os.environ.get("NUM_INDIVIDUALS", 10000))
-    if os.environ.get("RAILWAY_ENVIRONMENT") or os.environ.get("PORT"):
-        num_individuals = int(os.environ.get("NUM_INDIVIDUALS", 500))  # Smaller dataset for Railway
+    num_individuals = int(os.environ.get("NUM_INDIVIDUALS", 100))  # Default 100 for fast startup
     
     logger.info(f"Generating test data ({num_individuals} individuals)...")
     
