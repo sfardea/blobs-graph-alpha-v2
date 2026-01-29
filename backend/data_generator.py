@@ -242,9 +242,18 @@ class DataGenerator:
         # 8. Create relationships
         self._generate_relationships()
         
-        # 9. Compute layout
-        print("Computing graph layout...")
-        self.engine.compute_layout(scale=1000.0)
+        # 9. Compute layout (skip for fast startup, use random positions)
+        import os
+        if os.environ.get("SKIP_LAYOUT"):
+            print("Skipping layout computation (SKIP_LAYOUT=true)")
+            # Use random positions
+            import random
+            for node_id in self.engine.node_data:
+                self.engine.node_data[node_id]['x'] = random.uniform(0, 1000)
+                self.engine.node_data[node_id]['y'] = random.uniform(0, 1000)
+        else:
+            print("Computing graph layout...")
+            self.engine.compute_layout(scale=1000.0)
         
         print(f"Generation complete!")
         print(f"  - Individuals: {len(self.generated_ids['individuals'])}")

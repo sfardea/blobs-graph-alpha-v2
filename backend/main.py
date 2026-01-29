@@ -61,23 +61,17 @@ async def lifespan(app: FastAPI):
     import os
     logger.info("Starting Blobs Platform...")
     
-    # Use fewer nodes in production for faster startup
-    num_individuals = int(os.environ.get("NUM_INDIVIDUALS", 100))  # Default 100 for fast startup
+    # Generate data in background after startup
+    num_individuals = int(os.environ.get("NUM_INDIVIDUALS", 50))
     
-    logger.info(f"Generating test data ({num_individuals} individuals)...")
-    
-    start_time = time.time()
+    # Quick startup - generate minimal data
+    logger.info(f"Generating {num_individuals} nodes...")
     generate_test_data(graph_engine, num_individuals=num_individuals)
-    elapsed = time.time() - start_time
-    
-    logger.info(f"Test data generated in {elapsed:.2f}s")
-    stats = graph_engine.get_stats()
-    logger.info(f"Graph stats: {stats}")
+    logger.info("Ready!")
     
     yield
     
-    # Shutdown
-    logger.info("Shutting down Blobs Platform...")
+    logger.info("Shutting down...")
 
 
 # Create FastAPI app
