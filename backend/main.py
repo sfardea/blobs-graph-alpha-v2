@@ -64,8 +64,8 @@ async def lifespan(app: FastAPI):
     
     # Use fewer nodes in production for faster startup
     num_individuals = int(os.environ.get("NUM_INDIVIDUALS", 10000))
-    if os.environ.get("RAILWAY_ENVIRONMENT"):
-        num_individuals = int(os.environ.get("NUM_INDIVIDUALS", 1000))  # Smaller dataset for Railway
+    if os.environ.get("RAILWAY_ENVIRONMENT") or os.environ.get("PORT"):
+        num_individuals = int(os.environ.get("NUM_INDIVIDUALS", 500))  # Smaller dataset for Railway
     
     logger.info(f"Generating test data ({num_individuals} individuals)...")
     
