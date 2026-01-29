@@ -58,20 +58,24 @@ manager = ConnectionManager()
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Startup and shutdown events"""
-    import os
+    # Startup: Generate test data
+    # Use fewer nodes in production for faster startup (can be increased later)
+    num_individuals = int(os.getenv("NUM_INDIVIDUALS", "1000"))
     logger.info("Starting Blobs Platform...")
+    logger.info(f"Generating test data ({num_individuals} individuals)...")
     
-    # Generate data in background after startup
-    num_individuals = int(os.environ.get("NUM_INDIVIDUALS", 50))
-    
-    # Quick startup - generate minimal data
-    logger.info(f"Generating {num_individuals} nodes...")
+    start_time = time.time()
     generate_test_data(graph_engine, num_individuals=num_individuals)
-    logger.info("Ready!")
+    elapsed = time.time() - start_time
+    
+    logger.info(f"Test data generated in {elapsed:.2f}s")
+    stats = graph_engine.get_stats()
+    logger.info(f"Graph stats: {stats}")
     
     yield
     
-    logger.info("Shutting down...")
+    # Shutdown
+    logger.info("Shutting down Blobs Platform...")
 
 
 # Create FastAPI app
@@ -83,9 +87,13 @@ app = FastAPI(
 )
 
 # CORS middleware for frontend
+# Get allowed origins from environment or allow all for development
+import os
+CORS_ORIGINS = os.getenv("CORS_ORIGINS", "*").split(",")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allow all origins for development
+    allow_origins=CORS_ORIGINS if CORS_ORIGINS != ["*"] else ["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -542,14 +550,11 @@ async def websocket_graph(websocket: WebSocket):
 # ============================================
 
 if __name__ == "__main__":
-    import os
-    port = int(os.environ.get("PORT", 8000))
-    reload_mode = os.environ.get("RAILWAY_ENVIRONMENT") is None  # Only reload in dev
-    
+    port = int(os.getenv("PORT", 8000))
     uvicorn.run(
         "main:app",
         host="0.0.0.0",
         port=port,
-        reload=reload_mode,
+        reload=os.getenv("ENV", "development") == "development",
         log_level="info"
     )
