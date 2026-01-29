@@ -58,12 +58,19 @@ manager = ConnectionManager()
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Startup and shutdown events"""
+    import os
     # Startup: Generate test data
     logger.info("Starting Blobs Platform...")
-    logger.info("Generating test data (10K individuals)...")
+    
+    # Use fewer nodes in production for faster startup
+    num_individuals = int(os.environ.get("NUM_INDIVIDUALS", 10000))
+    if os.environ.get("RAILWAY_ENVIRONMENT"):
+        num_individuals = int(os.environ.get("NUM_INDIVIDUALS", 1000))  # Smaller dataset for Railway
+    
+    logger.info(f"Generating test data ({num_individuals} individuals)...")
     
     start_time = time.time()
-    generate_test_data(graph_engine, num_individuals=10000)
+    generate_test_data(graph_engine, num_individuals=num_individuals)
     elapsed = time.time() - start_time
     
     logger.info(f"Test data generated in {elapsed:.2f}s")
@@ -544,10 +551,14 @@ async def websocket_graph(websocket: WebSocket):
 # ============================================
 
 if __name__ == "__main__":
+    import os
+    port = int(os.environ.get("PORT", 8000))
+    reload_mode = os.environ.get("RAILWAY_ENVIRONMENT") is None  # Only reload in dev
+    
     uvicorn.run(
         "main:app",
         host="0.0.0.0",
-        port=8000,
-        reload=True,
+        port=port,
+        reload=reload_mode,
         log_level="info"
     )
