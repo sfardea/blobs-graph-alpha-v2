@@ -2,7 +2,10 @@
  * API Service - Handles all communication with the backend
  */
 
-const API_BASE = '/api';
+// Use environment variable for production, fallback to proxy for local dev
+const API_BASE = import.meta.env.VITE_API_URL 
+  ? `${import.meta.env.VITE_API_URL}/api`
+  : '/api';
 
 class ApiService {
   /**

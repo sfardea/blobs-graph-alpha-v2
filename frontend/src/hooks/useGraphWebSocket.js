@@ -15,8 +15,18 @@ export function useGraphWebSocket(onMessage) {
   const connect = useCallback(() => {
     try {
       // Determine WebSocket URL
-      const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-      const wsUrl = `${protocol}//${window.location.host}/ws/graph`;
+      let wsUrl;
+      if (import.meta.env.VITE_API_URL) {
+        // Production: use Railway backend URL
+        const apiUrl = import.meta.env.VITE_API_URL;
+        const wsProtocol = apiUrl.startsWith('https') ? 'wss:' : 'ws:';
+        const host = apiUrl.replace(/^https?:\/\//, '');
+        wsUrl = `${wsProtocol}//${host}/ws/graph`;
+      } else {
+        // Development: use proxy
+        const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+        wsUrl = `${protocol}//${window.location.host}/ws/graph`;
+      }
       
       console.log('Connecting to WebSocket:', wsUrl);
       
