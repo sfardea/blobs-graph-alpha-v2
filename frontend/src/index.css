@@ -1,0 +1,300 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base styles */
+* {
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background-color: #0a0e17;
+  color: #f1f5f9;
+  overflow: hidden;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #111827;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2a3a4d;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3b4a5d;
+}
+
+/* Glass morphism effect */
+.glass {
+  background: rgba(17, 24, 39, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(42, 58, 77, 0.5);
+}
+
+/* Gradient text */
+.gradient-text {
+  background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 50%, #8b5cf6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Node type badges */
+.badge {
+  @apply px-2 py-1 rounded-full text-xs font-medium;
+}
+
+.badge-individual {
+  background: rgba(6, 182, 212, 0.2);
+  color: #06b6d4;
+  border: 1px solid rgba(6, 182, 212, 0.3);
+}
+
+.badge-blob {
+  background: rgba(139, 92, 246, 0.2);
+  color: #8b5cf6;
+  border: 1px solid rgba(139, 92, 246, 0.3);
+}
+
+.badge-aggregated {
+  background: rgba(245, 158, 11, 0.2);
+  color: #f59e0b;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.badge-project {
+  background: rgba(16, 185, 129, 0.2);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.badge-skill {
+  background: rgba(236, 72, 153, 0.2);
+  color: #ec4899;
+  border: 1px solid rgba(236, 72, 153, 0.3);
+}
+
+/* Status badges */
+.status-available {
+  background: rgba(16, 185, 129, 0.2);
+  color: #10b981;
+}
+
+.status-unavailable {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+}
+
+/* Button styles */
+.btn {
+  @apply px-4 py-2 rounded-lg font-medium transition-all duration-200;
+}
+
+.btn-primary {
+  @apply bg-blob-primary text-white hover:bg-cyan-400;
+  box-shadow: 0 0 20px rgba(6, 182, 212, 0.3);
+}
+
+.btn-primary:hover {
+  box-shadow: 0 0 30px rgba(6, 182, 212, 0.5);
+}
+
+.btn-secondary {
+  @apply bg-blob-card border border-blob-border text-blob-text hover:bg-blob-border;
+}
+
+.btn-ghost {
+  @apply bg-transparent text-blob-text-muted hover:text-blob-text hover:bg-blob-card;
+}
+
+/* Input styles */
+.input {
+  @apply w-full px-4 py-2 bg-blob-card border border-blob-border rounded-lg text-blob-text placeholder-blob-text-dim focus:outline-none focus:border-blob-primary transition-colors duration-200;
+}
+
+.input:focus {
+  box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.2);
+}
+
+/* Card styles */
+.card {
+  @apply bg-blob-card border border-blob-border rounded-xl p-4;
+}
+
+.card-hover {
+  @apply card transition-all duration-200 hover:border-blob-primary cursor-pointer;
+}
+
+.card-hover:hover {
+  box-shadow: 0 0 20px rgba(6, 182, 212, 0.1);
+}
+
+/* Graph canvas container */
+.graph-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(ellipse at center, #111827 0%, #0a0e17 70%);
+}
+
+/* Grid pattern overlay */
+.graph-container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(42, 58, 77, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(42, 58, 77, 0.1) 1px, transparent 1px);
+  background-size: 50px 50px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Sigma container */
+.sigma-container {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+/* Panel animations */
+.panel-enter {
+  animation: slideUp 0.3s ease-out;
+}
+
+.panel-slide-left {
+  animation: slideFromLeft 0.3s ease-out;
+}
+
+@keyframes slideFromLeft {
+  0% {
+    transform: translateX(-20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Pulse animation for active nodes */
+@keyframes nodePulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.8;
+  }
+}
+
+.node-pulse {
+  animation: nodePulse 2s ease-in-out infinite;
+}
+
+/* Loading spinner */
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(6, 182, 212, 0.2);
+  border-top-color: #06b6d4;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Tooltip styles */
+.tooltip {
+  @apply absolute z-50 px-3 py-2 text-sm bg-blob-card border border-blob-border rounded-lg shadow-xl;
+  animation: fadeIn 0.15s ease-out;
+}
+
+/* Select dropdown */
+select {
+  @apply input appearance-none cursor-pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+}
+
+/* Skill tags */
+.skill-tag {
+  @apply inline-flex items-center px-2 py-1 text-xs font-medium rounded-md;
+  background: rgba(6, 182, 212, 0.15);
+  color: #22d3ee;
+  border: 1px solid rgba(6, 182, 212, 0.25);
+}
+
+/* Stats display */
+.stat-value {
+  @apply text-2xl font-bold font-display gradient-text;
+}
+
+.stat-label {
+  @apply text-xs text-blob-text-muted uppercase tracking-wider;
+}
+
+/* Zoom controls */
+.zoom-btn {
+  @apply w-10 h-10 flex items-center justify-center rounded-lg bg-blob-card border border-blob-border text-blob-text-muted hover:text-blob-text hover:border-blob-primary transition-all duration-200;
+}
+
+.zoom-btn:hover {
+  box-shadow: 0 0 15px rgba(6, 182, 212, 0.2);
+}
+
+/* Glow shadows */
+.shadow-glow-sm {
+  box-shadow: 0 0 10px rgba(6, 182, 212, 0.3);
+}
+
+.shadow-glow-md {
+  box-shadow: 0 0 20px rgba(6, 182, 212, 0.4), 0 0 40px rgba(6, 182, 212, 0.2);
+}
+
+.shadow-glow-lg {
+  box-shadow: 0 0 30px rgba(6, 182, 212, 0.5), 0 0 60px rgba(6, 182, 212, 0.3);
+}
+
+/* Search highlight */
+.highlight {
+  background: rgba(6, 182, 212, 0.3);
+  padding: 0 2px;
+  border-radius: 2px;
+}
+
+/* Empty state */
+.empty-state {
+  @apply flex flex-col items-center justify-center p-8 text-center text-blob-text-muted;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .sidebar {
+    @apply w-full;
+  }
+}
